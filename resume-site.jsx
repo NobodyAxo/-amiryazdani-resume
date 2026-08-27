@@ -9,6 +9,9 @@ import {
   Globe,
   Sun,
   Moon,
+  Award,
+  X,
+  Maximize2,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -37,6 +40,7 @@ const t = {
       about: "about.js",
       experience: "experience.js",
       skills: "skills.js",
+      certificates: "certificates.js",
       projects: "projects.js",
       contact: "contact.js",
     },
@@ -95,6 +99,15 @@ const t = {
       Backend: "بک‌اند",
       Tools: "ابزارها",
     },
+    certificatesTitle: "certificates.js",
+    certificates: [
+      {
+        title: "دوره Network+",
+        issuer: "آکادمی دانشجویار",
+        meta: "۵ ساعت · ۱۴۰۵/۰۱/۰۲",
+        image: "/certificates/network-plus-fa.jpg",
+      },
+    ],
     projectsTitle: "projects.js",
     projects: [
       {
@@ -125,6 +138,7 @@ const t = {
       about: "about.js",
       experience: "experience.js",
       skills: "skills.js",
+      certificates: "certificates.js",
       projects: "projects.js",
       contact: "contact.js",
     },
@@ -183,6 +197,15 @@ const t = {
       Backend: "Backend",
       Tools: "Tools",
     },
+    certificatesTitle: "certificates.js",
+    certificates: [
+      {
+        title: "Network+ Course",
+        issuer: "Daneshjooyar Academy",
+        meta: "5 hours · 2026/03/22",
+        image: "/certificates/network-plus-en.jpg",
+      },
+    ],
     projectsTitle: "projects.js",
     projects: [
       {
@@ -213,6 +236,7 @@ const t = {
       about: "about.js",
       experience: "experience.js",
       skills: "skills.js",
+      certificates: "certificates.js",
       projects: "projects.js",
       contact: "contact.js",
     },
@@ -271,6 +295,15 @@ const t = {
       Backend: "Backend",
       Tools: "Tools",
     },
+    certificatesTitle: "certificates.js",
+    certificates: [
+      {
+        title: "Network+ Kurs",
+        issuer: "Daneshjooyar Academy",
+        meta: "5 Stunden · 22.03.2026",
+        image: "/certificates/network-plus-en.jpg",
+      },
+    ],
     projectsTitle: "projects.js",
     projects: [
       {
@@ -304,7 +337,7 @@ const skills = {
   Tools: ["Git", "Docker", "Figma", "Vitest"],
 };
 
-const tabOrder = ["about", "experience", "skills", "projects", "contact"];
+const tabOrder = ["about", "experience", "skills", "certificates", "projects", "contact"];
 
 /* ------------------------------------------------------------------ */
 /* Typing hero effect                                                  */
@@ -370,6 +403,7 @@ export default function App() {
   const [lang, setLang] = useState("fa");
   const [theme, setTheme] = useState("dark");
   const [active, setActive] = useState("about");
+  const [lightbox, setLightbox] = useState(null);
   const sectionRefs = useRef({});
   const copy = t[lang];
   const dir = LANGS.find((l) => l.code === lang).dir;
@@ -707,6 +741,120 @@ export default function App() {
           direction: ltr;
         }
 
+        /* ---- Certificates ---- */
+        .cert-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+          gap: 16px;
+        }
+        .cert-card {
+          background: var(--panel);
+          border: 1px solid var(--line);
+          border-radius: 8px;
+          overflow: hidden;
+          transition: border-color 0.15s ease, transform 0.15s ease;
+        }
+        .cert-card:hover { border-color: var(--var); transform: translateY(-1px); }
+        .cert-card-bar {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 12px;
+          font-size: 11.5px;
+          color: var(--comment);
+          border-bottom: 1px solid var(--line);
+          background: var(--panel-alt);
+          direction: ltr;
+        }
+        .cert-card-bar svg { color: var(--fn); flex-shrink: 0; }
+        .cert-image-wrap {
+          position: relative;
+          display: block;
+          width: 100%;
+          border: none;
+          padding: 0;
+          margin: 0;
+          background: var(--panel-alt);
+          cursor: zoom-in;
+        }
+        .cert-image {
+          width: 100%;
+          height: 150px;
+          object-fit: cover;
+          object-position: top;
+          display: block;
+        }
+        .cert-zoom {
+          position: absolute;
+          inset-inline-end: 8px;
+          bottom: 8px;
+          width: 28px;
+          height: 28px;
+          border-radius: 6px;
+          background: rgba(11, 14, 20, 0.75);
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.15s ease;
+        }
+        .cert-image-wrap:hover .cert-zoom { opacity: 1; }
+        .cert-info { padding: 12px 14px 14px; }
+        .cert-title { color: var(--fn); font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+        .cert-issuer { color: var(--muted); font-size: 12.5px; margin-bottom: 6px; }
+        .cert-meta { color: var(--comment); font-size: 11px; direction: ltr; }
+
+        .lightbox-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+          z-index: 100;
+        }
+        .lightbox-box {
+          background: var(--panel);
+          border: 1px solid var(--line);
+          border-radius: 10px;
+          overflow: hidden;
+          max-width: min(90vw, 900px);
+          max-height: 90vh;
+          display: flex;
+          flex-direction: column;
+        }
+        .lightbox-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 14px;
+          border-bottom: 1px solid var(--line);
+          font-size: 12.5px;
+          color: var(--text);
+          direction: ltr;
+        }
+        .lightbox-close {
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          border: 1px solid var(--line);
+          border-radius: 5px;
+          color: var(--muted);
+          cursor: pointer;
+        }
+        .lightbox-close:hover { color: var(--text); border-color: var(--faint); }
+        .lightbox-img {
+          display: block;
+          max-width: 100%;
+          max-height: calc(90vh - 45px);
+          object-fit: contain;
+        }
+
         .copyright {
           text-align: center;
           padding: 14px 12px;
@@ -830,6 +978,38 @@ export default function App() {
           </div>
         </section>
 
+        {/* CERTIFICATES */}
+        <section id="certificates" data-section="certificates" ref={(el) => (sectionRefs.current.certificates = el)}>
+          <div className="section-title mono">
+            <ChevronRight size={14} /> {copy.certificatesTitle}
+          </div>
+          <div className="cert-grid">
+            {copy.certificates.map((c) => (
+              <div className="cert-card" key={c.title}>
+                <div className="cert-card-bar mono">
+                  <Award size={13} />
+                  <span>{c.title.toLowerCase().replace(/\s+/g, "-")}.jpg</span>
+                </div>
+                <button
+                  className="cert-image-wrap"
+                  onClick={() => setLightbox(c)}
+                  aria-label={c.title}
+                >
+                  <img src={c.image} alt={c.title} className="cert-image" loading="lazy" />
+                  <span className="cert-zoom">
+                    <Maximize2 size={16} />
+                  </span>
+                </button>
+                <div className="cert-info">
+                  <div className="cert-title">{c.title}</div>
+                  <div className="cert-issuer">{c.issuer}</div>
+                  <div className="cert-meta mono">{c.meta}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* PROJECTS */}
         <section id="projects" data-section="projects" ref={(el) => (sectionRefs.current.projects = el)}>
           <div className="section-title mono">
@@ -887,6 +1067,20 @@ export default function App() {
         <span>UTF-8 · {copy.statusLang}: {lang}</span>
       </div>
       <div className="copyright mono">{copy.copyright}</div>
+
+      {lightbox && (
+        <div className="lightbox-overlay" onClick={() => setLightbox(null)}>
+          <div className="lightbox-box" onClick={(e) => e.stopPropagation()}>
+            <div className="lightbox-bar mono">
+              <span>{lightbox.title}</span>
+              <button className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Close">
+                <X size={16} />
+              </button>
+            </div>
+            <img src={lightbox.image} alt={lightbox.title} className="lightbox-img" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

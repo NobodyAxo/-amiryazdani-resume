@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Link } from "react-router-dom";
 import {
   Github,
   Phone,
@@ -121,9 +122,16 @@ const t = {
         tags: ["Next.js", "TypeScript"],
       },
       {
-        name: "routewise",
-        description: "ابزار CLI برای نمایش بصری درخت React Router در پروژه‌های بزرگ.",
-        tags: ["Node.js", "CLI"],
+        name: "IP/Domain Lookup",
+        description: "ابزار وب برای دریافت اطلاعات جغرافیایی، ISP و شبکه‌ای هر IP یا دامنه، با اتصال به API واقعی.",
+        tags: ["React", "REST API", "Networking"],
+        link: "/tools/ip-lookup",
+      },
+      {
+        name: "Port Scanner Visualizer",
+        description: "نمایش انیمیشنی و آموزشی نتیجه اسکن پورت؛ کاملاً شبیه‌سازی‌شده و بدون اتصال به سرور واقعی.",
+        tags: ["React", "Networking", "UI/UX"],
+        link: "/tools/port-scanner",
       },
     ],
     contactTitle: "contact.js",
@@ -219,9 +227,16 @@ const t = {
         tags: ["Next.js", "TypeScript"],
       },
       {
-        name: "routewise",
-        description: "CLI tool that visualizes React Router trees for large codebases.",
-        tags: ["Node.js", "CLI"],
+        name: "IP/Domain Lookup",
+        description: "Web tool that returns geolocation, ISP, and network info for any IP or domain, backed by a real public API.",
+        tags: ["React", "REST API", "Networking"],
+        link: "/tools/ip-lookup",
+      },
+      {
+        name: "Port Scanner Visualizer",
+        description: "An animated, educational demo of a port-scan result view — fully simulated, no real connections made.",
+        tags: ["React", "Networking", "UI/UX"],
+        link: "/tools/port-scanner",
       },
     ],
     contactTitle: "contact.js",
@@ -317,9 +332,16 @@ const t = {
         tags: ["Next.js", "TypeScript"],
       },
       {
-        name: "routewise",
-        description: "CLI-Tool zur Visualisierung von React-Router-Bäumen in großen Codebasen.",
-        tags: ["Node.js", "CLI"],
+        name: "IP/Domain Lookup",
+        description: "Web-Tool, das Geolokalisierung, ISP und Netzwerkdaten für jede IP oder Domain liefert, mit einer echten öffentlichen API.",
+        tags: ["React", "REST API", "Networking"],
+        link: "/tools/ip-lookup",
+      },
+      {
+        name: "Port Scanner Visualizer",
+        description: "Animierte, edukative Demo einer Port-Scan-Ansicht — vollständig simuliert, keine echten Verbindungen.",
+        tags: ["React", "Networking", "UI/UX"],
+        link: "/tools/port-scanner",
       },
     ],
     contactTitle: "contact.js",
@@ -1020,9 +1042,15 @@ export default function App() {
               <div className="project-card" key={p.name}>
                 <div className="project-head">
                   <span className="project-name mono">{p.name}</span>
-                  <a href="#" className="icon-link" aria-label={`Open ${p.name}`}>
-                    <ExternalLink size={15} />
-                  </a>
+                  {p.link ? (
+                    <Link to={p.link} className="icon-link" aria-label={`Open ${p.name}`}>
+                      <ExternalLink size={15} />
+                    </Link>
+                  ) : (
+                    <a href="#" className="icon-link" aria-label={`Open ${p.name}`}>
+                      <ExternalLink size={15} />
+                    </a>
+                  )}
                 </div>
                 <p className="project-desc">{p.description}</p>
                 <div className="project-tags mono">
